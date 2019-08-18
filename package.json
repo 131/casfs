@@ -1,0 +1,45 @@
+{
+  "name": "casfs",
+  "version": "1.0.0",
+  "description": "local content-addressable file system",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run eslint && npm run cover",
+    "eslint": "eslint .",
+    "mocha": "node node_modules/mocha/bin/_mocha -b",
+    "cover": "nyc --temp-directory coverage/.nyc_output --silent --reporter none node_modules/mocha/bin/_mocha -b test/ && nyc --temp-directory coverage/.nyc_output  report --include . --report-dir coverage/html/ --reporter text-summary --reporter html --reporter lcov",
+    "coveralls": "npm install coveralls && node ./node_modules/coveralls/bin/coveralls.js < ./coverage/html/lcov.info"
+  },
+  "author": "Francois Leurent <131.js@cloudyks.org>",
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^2.3.2",
+    "fuse-bindings": "^2.11.0",
+    "mout": "^1.0.0",
+    "nyks": "^5.12.6",
+    "sqlitefs": "^1.1.0"
+  },
+  "devDependencies": {
+    "eslint-plugin-ivs": "^2.1.0",
+    "expect.js": "^0.3.1",
+    "glob": "^7.1.1",
+    "mocha": "^3.1.2",
+    "nyc": "^13.0.1"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/131/casfs.git"
+  },
+  "keywords": [
+    "cas",
+    "fs",
+    "cloudfs"
+  ],
+  "bugs": {
+    "url": "https://github.com/131/casfs/issues"
+  },
+  "homepage": "https://github.com/131/casfs#readme"
+}
