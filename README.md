@@ -25,7 +25,7 @@ Casfs, a local content-addressable file system.
 - [X] Proper deployment flow
 - [X] Writable/editable files (fs mode)
 - [X] a bit better test suite (win/linux)
-- [X] (create dedicated project for writable big fs chunks)
+- [ ] (create dedicated project for writable big fs chunks)
 
 - [ ] Writable/editable big files (fs mode)   <= *current*
 - [ ] Embbed configuration/web browse server

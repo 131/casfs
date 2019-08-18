@@ -1,6 +1,5 @@
 "use strict";
 
-const net  = require('net'); //simple ipc
 const fs   = require('fs');
 const path = require('path');
 const cp   = require('child_process');
@@ -21,11 +20,11 @@ const Localcasfs = require('../lib/localcasfs');
 
 const {filesize, fileExists, touch} = require('../lib/utils');//, filemtime
 
-var child;
+var child, server;
 
 const mountPath = path.join(__dirname, 'nowhere');
 var fixture_paths = path.join(__dirname, 'localcas');
-var  mock = require(path.join(fixture_paths, 'index.json'));
+var mock = require(path.join(fixture_paths, 'index.json'));
 
 
 /**
@@ -42,15 +41,19 @@ let moutServer = async () => {
 
   await inodes.warmup();
   await inodes.load(mock);
-  let server = new Localcasfs(inodes, fixture_paths);
+  server = new Localcasfs(inodes, {
+    root_dir : fixture_paths
+  });
 
   await server.mount(mountPath);
 };
 
 if(process.argv[2] == "child") {
   return moutServer().then(() => {
-    let lnk = net.connect(process.argv[3]);//trigger back
-    lnk.on('error', () => {});
+    process.send("ready");
+    process.on('message', function(what) {
+      process.exit();
+    });
   });
 }
 
@@ -64,23 +67,19 @@ describe("Initial localfs setup", function() {
       } catch(err) {}
     }
 
-    var args = ["node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--reporter", "none", "--silent"];
+    if(false) {
+      await moutServer();
+      return;
+    }
+    var args = [ "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--reporter", "none", "--silent"];
 
-    let server = net.createServer();
-    server.on('error', () => {});
-    let port = await new Promise((resolve) => {
-      server.listen(() => {
-        resolve(server.address().port);
-      });
-    });
-
-    args.push("node", __filename, "child", port);
-    child = cp.spawn('node', args, {'stdio' : 'inherit'});
-    console.log("Spawning", process.execPath, args.join(' '));
+    args.push("node", __filename, "child");
+    child = cp.fork("node_modules/nyc/bin/nyc.js", args, {'stdio' : 'inherit'});
+    console.log("Spawning", args.join(' '));
     console.log("Awaiting for subprocess (mount) to be ready");
-    let lnk = await new Promise(resolve => server.on('connection', resolve));
-    lnk.on('error', () => {});
-    console.log("Child is ready, lets proceed");
+
+    let lnk = await new Promise(resolve => child.on('message', resolve));
+    console.log("Child is ready, lets proceed", lnk);
   });
 });
 
@@ -88,7 +87,6 @@ describe("Initial localfs setup", function() {
 //note that we CANNOT use ANY sync methods (since we ARE in the very same thread)
 
 describe("testing localcasfs read", function() {
-
 
   it("should match references files", async () => {
 
@@ -116,6 +114,7 @@ describe("testing localcasfs read", function() {
     expect(challenge).to.eql(files);
   });
 
+
 });
 
 
@@ -142,7 +141,7 @@ describe("testing localcasfs inode update", function() {
 
 });
 
-
+if(false)
 describe("testing localcasfs data write", function() {
   this.timeout(60 * 1000);
 
@@ -190,8 +189,13 @@ describe("testing localcasfs data write", function() {
 describe("Shutting down", function() {
 
   it("Should shutdown child and write coverage", async () => {
+    if(!child)
+      return;
 
-    child.kill('SIGINT');
+    if(server)
+      server.close();
+
+    child.send("done");
     let exit = await new Promise(resolve => child.on('exit', resolve));
     console.log("Got exit code", exit);
 
