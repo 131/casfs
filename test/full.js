@@ -42,7 +42,8 @@ let moutServer = async () => {
   await inodes.warmup();
   await inodes.load(mock);
   server = new Localcasfs(inodes, {
-    root_dir : fixture_paths
+    root_dir         : fixture_paths,
+    block_size_limit : 60,
   });
 
   await server.mount(mountPath);
@@ -67,10 +68,14 @@ describe("Initial localfs setup", function() {
       } catch(err) {}
     }
 
-    var args = ["--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--reporter", "none", "--silent"];
+    var args = [];
+    if(global.__coverage__ !== undefined)
+      args.push("node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--reporter", "none", "--silent", "node");
 
-    args.push("node", __filename, "child");
-    child = cp.fork("node_modules/nyc/bin/nyc.js", args, {'stdio' : 'inherit'});
+    args.push(__filename, "child");
+    child = cp.fork(args.shift(), args, {'stdio' : 'inherit'});
+
+
     console.log("Spawning", args.join(' '));
     console.log("Awaiting for subprocess (mount) to be ready");
 
@@ -146,6 +151,7 @@ describe("testing localcasfs data write", function() {
     let subpath = "/this/is/a/newfile";
     let somepath = path.join(mountPath, subpath);
     let dst = fs.createWriteStream(somepath);
+    //note that block size is 60... (do not test slice here)
     dst.write(random), dst.end(payload);
 
     await new Promise(resolve => dst.on('finish', resolve));
@@ -154,6 +160,22 @@ describe("testing localcasfs data write", function() {
     let body = fs.createReadStream(somepath, {flags : 'rs'});
     body = String(await drain(body));
     expect(body).to.eql(random + payload);
+  });
+
+  it("should write a bigfile", async () => {
+    let payload = [guid(), guid(), guid(), guid()].join("\n"); //more than 60
+    let subpath = "/this/is/a/bigfile";
+    let somepath = path.join(mountPath, subpath);
+
+    let dst = fs.createWriteStream(somepath);
+    dst.end(payload);
+
+    await new Promise(resolve => dst.on('finish', resolve));
+
+    console.log("Done writing, now checking");
+    let body = fs.createReadStream(somepath, {flags : 'rs'});
+    body = String(await drain(body));
+    expect(body).to.eql(payload);
   });
 
   it("should write 100times a file", async () => {
@@ -177,6 +199,7 @@ describe("testing localcasfs data write", function() {
       expect(challenge).to.eql(random);
     }
   });
+
 
 });
 
