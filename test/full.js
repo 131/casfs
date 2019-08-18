@@ -51,7 +51,7 @@ let moutServer = async () => {
 if(process.argv[2] == "child") {
   return moutServer().then(() => {
     process.send("ready");
-    process.on('message', function(what) {
+    process.on('message', function(/* body */) {
       process.exit();
     });
   });
@@ -67,11 +67,7 @@ describe("Initial localfs setup", function() {
       } catch(err) {}
     }
 
-    if(false) {
-      await moutServer();
-      return;
-    }
-    var args = [ "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--reporter", "none", "--silent"];
+    var args = ["--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--reporter", "none", "--silent"];
 
     args.push("node", __filename, "child");
     child = cp.fork("node_modules/nyc/bin/nyc.js", args, {'stdio' : 'inherit'});
@@ -141,7 +137,6 @@ describe("testing localcasfs inode update", function() {
 
 });
 
-if(false)
 describe("testing localcasfs data write", function() {
   this.timeout(60 * 1000);
 
