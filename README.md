@@ -21,13 +21,14 @@ Casfs, a local content-addressable file system.
 
 # Roadmap
 - [X] Writable Inodes POC (rename, delete, mkdir)
-- [X] Initial test flow (through fs driver)
+- [X] Initial test flow
 - [X] Proper deployment flow
-- [X] Writable/editable files (fs mode)
+- [X] Writable/editable files
 - [X] a bit better test suite (win/linux)
-- [ ] (create dedicated project for writable big fs chunks)
+- [X] switch to dedicated project / slice cloudfs
+- [X] Readable big files
 
-- [ ] Writable/editable big files (fs mode)   <= *current*
+- [ ] Writable big files <= *current*
 - [ ] Embbed configuration/web browse server
 - [ ] Publish read-only mode
 - [ ] With full test suite (e.g. winfsp/secfs test suite)
