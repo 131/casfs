@@ -27,8 +27,9 @@ Casfs, a local content-addressable file system.
 - [X] a bit better test suite (win/linux)
 - [X] switch to dedicated project / slice cloudfs
 - [X] Readable big files
-- [X] Writable big files
+- [X] Writable big files (continuous mode)
 
+- [ ] Append file/big files  <= *current*
 - [ ] Embbed configuration/web browse server
 - [ ] Publish read-only mode
 - [ ] With full test suite (e.g. winfsp/secfs test suite)
