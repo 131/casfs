@@ -5,3 +5,5 @@
 /config
 /data
 /remote
+*.sqlite
+/test/nowhere

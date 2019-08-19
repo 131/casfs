@@ -1,7 +1,7 @@
 "use strict";
+
 const fs = require('fs');
 const path  = require('path');
-const tmppath = require('nyks/fs/tmppath');
 
 const guid   = require('mout/random/guid');
 const drain  = require('nyks/stream/drain');
@@ -15,15 +15,16 @@ class tester {
 
   async run() {
     let fixture_paths = path.join(__dirname, 'test', 'localcas');
-    let mock = require(path.join(fixture_paths, 'index.json'));
+    let mock_path = path.join(fixture_paths, 'index.json');
+    let mock = fs.existsSync(mock_path) ? require(mock_path) : [];
 
-    let inodes_path = tmppath("sqlite");
+    let inodes_path = "./test.sqlite";
     let inodes = new Sqlfs(inodes_path);
 
-    await inodes.warmup();
-    await inodes.load(mock);
+    if(await inodes.warmup())
+      await inodes.load(mock);
 
-    let server = new Localcasfs(inodes, fixture_paths);
+    let server = new Localcasfs(inodes, {root_dir : fixture_paths});
     console.log("All good, mounting file system");
     await server.mount(mountPath);
   }
