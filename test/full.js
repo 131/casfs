@@ -36,8 +36,8 @@ var mock = require(path.join(fixture_paths, 'index.json'));
 */
 
 let moutServer = async () => {
-  let inodes_path = tmppath("sqlite");
-  let inodes = new Sqlfs(inodes_path);
+  let tmpfile = tmppath("sqlite");
+  let inodes = new Sqlfs({backend : {type : "local"}, filename : tmpfile});
 
   await inodes.warmup();
   await inodes.load(mock);
