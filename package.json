@@ -16,7 +16,7 @@
     "debug": "^2.3.2",
     "fuse-bindings": "^2.11.0",
     "mout": "^1.0.0",
-    "nyks": "^5.12.6",
+    "nyks": "^5.14.1",
     "sqlitefs": "^1.1.3"
   },
   "devDependencies": {
