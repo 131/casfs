@@ -15,11 +15,14 @@ Casfs, a local content-addressable file system.
 
 # Motivation
 
-[Casfs](https://github.com/131/casfs) in a **file system**, with a very simple design. File metadata (inode table) is stored in a sqlite database ([see dedicated sqlfs project](https://github.com/131/sqlitefs)), and file contents relies on a [content-addressable storage](https://en.wikipedia.org/wiki/Content-addressable_storage). [Casfs](https://github.com/131/casfs) is mainly designed to be a test platform / support backend for **[cloudfs](https://github.com/131/cloudfs)**.
+[Casfs](https://github.com/131/casfs) in a **file system**, with a very simple design. File metadata (inode table) is stored in a sqlite database ([see dedicated sqlfs project](https://github.com/131/sqlfs)), and file contents relies on a [content-addressable storage](https://en.wikipedia.org/wiki/Content-addressable_storage). [Casfs](https://github.com/131/casfs) is mainly designed to be a test platform / support backend for **[cloudfs](https://github.com/131/cloudfs)**.
 
 
+# API status
+**Stable** !
 
 # Roadmap
+
 - [X] Writable Inodes POC (rename, delete, mkdir)
 - [X] Initial test flow
 - [X] Proper deployment flow
@@ -28,15 +31,13 @@ Casfs, a local content-addressable file system.
 - [X] switch to dedicated project / slice cloudfs
 - [X] Readable big files
 - [X] Writable big files (continuous mode)
-
-- [ ] Append file/big files  <= *current*
-- [ ] Embbed configuration/web browse server
-- [ ] Publish read-only mode
-- [ ] With full test suite (e.g. winfsp/secfs test suite)
+- [X] Publish read-only mode
 
 # Background daemon & pending tasks
-- [ ] Garbage collection
-- [ ] Support for nwjs (fuse-binding & sqlite3)
+- [ ] With full test suite (e.g. winfsp/secfs test suite)
+- ~~[ ] Append file/big files~~  (postponed)
+- ~~[ ] Embbed configuration/web browse server~~ (rejected to cloudfs)
+- ~~[ ] Garbage collection~~ (rejected to cloudfs ?)
 
 
 # Features
