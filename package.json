@@ -1,6 +1,6 @@
 {
   "name": "casfs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "local content-addressable file system",
   "main": "lib/index.js",
   "scripts": {
