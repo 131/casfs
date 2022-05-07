@@ -7,7 +7,7 @@
     "test": "npm run eslint && npm run cover",
     "eslint": "eslint .",
     "mocha": "node node_modules/mocha/bin/_mocha -b",
-    "cover": "nyc --temp-directory coverage/.nyc_output --silent --reporter none node_modules/mocha/bin/_mocha -b test/ && nyc report --temp-directory coverage/.nyc_output  --report-dir coverage/html/ --reporter text-summary --reporter html --reporter lcov",
+    "cover": "nyc mocha",
     "coveralls": "npm install coveralls && node ./node_modules/coveralls/bin/coveralls.js < ./coverage/html/lcov.info"
   },
   "author": "Francois Leurent <131.js@cloudyks.org>",
@@ -24,7 +24,7 @@
     "expect.js": "^0.3.1",
     "glob": "^7.1.1",
     "mocha": "^3.1.2",
-    "nyc": "^13.0.1"
+    "nyc": "^15.1.0"
   },
   "directories": {
     "test": "test"

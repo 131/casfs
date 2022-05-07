@@ -69,8 +69,6 @@ describe("Initial localfs setup", function() {
     }
 
     var args = [];
-    if(global.__coverage__ !== undefined)
-      args.push("node_modules/nyc/bin/nyc.js", "--temp-directory", "coverage/.nyc_output", "--preserve-comments", "--reporter", "none", "--silent", "node");
 
     args.push(__filename, "child");
     child = cp.fork(args.shift(), args, {'stdio' : 'inherit'});
