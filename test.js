@@ -12,11 +12,11 @@ class tester {
     let fixture_paths = path.join(__dirname, 'test', 'localcas');
 
     let inodes_path = "./test.sqlite";
-    let inodes = new Sqlfs({backend : {type : "local"}, filename : inodes_path});
+    let inodes = new Sqlfs({backend : {type : "local"}, filename : inodes_path}, {allow_new  : true});
 
     await inodes.warmup();
 
-    let server = new Localcasfs(inodes, {root_dir : fixture_paths});
+    let server = new Localcasfs(inodes, {root_dir : fixture_paths, block_size_limit : 32 * 1024 * 1024});
     console.log("All good, mounting file system");
     await server.mount(mountPath);
   }

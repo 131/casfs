@@ -11,7 +11,7 @@ const guid    = require('mout/random/guid');
 const tmppath = require('nyks/fs/tmppath');
 const drain   = require('nyks/stream/drain');
 const promisify = require('nyks/function/promisify');
-const passthru = promisify(require('nyks/child_process/passthru'));
+const passthru = require('nyks/child_process/passthru');
 const glob     = promisify(require('glob'));
 //const sleep  = require('nyks/async/sleep');
 
